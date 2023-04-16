@@ -2,6 +2,7 @@
 const inputItem = document.getElementById('item-input') 
 const itemForm = document.getElementById('item-form')  
 const itemList = document.getElementById('item-list')
+const clearButton = document.getElementById('clear')
 
 function createButton(classes){
     button = document.createElement('button')
@@ -44,4 +45,20 @@ function addItem(e){
     
 }
 
+function removeItem(e){
+    // Check if the remove icon was clicked
+    if(e.target.parentElement.classList.contains('remove-item')){
+        e.target.parentElement.parentElement.remove()
+        
+    }
+}
+
+function removeAllItems(){
+    while(itemList.firstChild){
+        itemList.firstChild.remove()
+    }
+}
+
 itemForm.addEventListener('submit', addItem);   
+itemList.addEventListener('click', removeItem);
+clearButton.addEventListener('click', removeAllItems)
