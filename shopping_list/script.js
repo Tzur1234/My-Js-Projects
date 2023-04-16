@@ -3,7 +3,7 @@ const inputItem = document.getElementById('item-input')
 const itemForm = document.getElementById('item-form')  
 const itemList = document.getElementById('item-list')
 const clearButton = document.getElementById('clear')
-const filterItem = document.querySelector('.filter')
+const filterItem = document.getElementById('filter')
 
 
 
@@ -85,7 +85,26 @@ window.addEventListener('load', (e) => {
     resetUI();
 });
 
+function filter_Item(e){
+    items = itemList.querySelectorAll('li')
+    const text = e.target.value.toLowerCase()
+    
+    // lop over all items
+    items.forEach((item) =>{
+        text_item = item.firstChild.textContent.toLowerCase()
+        console.log(text_item)
+
+        if (text_item.indexOf(text) != -1){
+            item.style.display = 'flex'
+        }
+        else{
+            item.style.display = 'none'
+        }
+    });
+    
+}
 
 itemForm.addEventListener('submit', addItem);   
 itemList.addEventListener('click', removeItem);
 clearButton.addEventListener('click', removeAllItems)
+filterItem.addEventListener('input', filter_Item)
