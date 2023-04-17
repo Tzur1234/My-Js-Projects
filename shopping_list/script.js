@@ -8,7 +8,11 @@ let isEditMode = false;
 const formBtn = itemForm.querySelector('.btn') 
 
 
+function removeItemFromArray(items, value){
+    const index = items.indexOf(value)
+    items.splice(index, 1)
 
+}
 
 function createButton(classes){
     button = document.createElement('button')
@@ -50,6 +54,25 @@ function addItem(e){
         alert('Please add item');
         return;
     }
+
+    // Check for edit mode
+    if(isEditMode){
+        const itemToEdit = document.querySelector('.edit-mode')
+        
+        // remove iitem from the DOM
+        items = JSON.parse(localStorage.getItem('items'))
+        removeItemFromArray(items, itemToEdit.firstChild.textContent)
+        localStorage.setItem('items', JSON.stringify(items))
+        
+        // remove Item from the UI
+        itemToEdit.remove()
+
+        // updat isEditMode to false
+        isEditMode = false 
+
+        // reset the UI 
+        resetUI()
+    }
  
     // add the item to the UI
     addItemUI(inputItem.value)
@@ -58,8 +81,6 @@ function addItem(e){
     addItemToDom(inputItem.value)
 
     inputItem.value = ''
-
-
 
     resetUI();
 
@@ -84,11 +105,7 @@ function addItemUI(item){
 
 }
 
-function removeItemFromArray(items, value){
-    const index = items.indexOf(value)
-    items.splice(index, 1)
 
-}
 
 function setItemToEdit(item){
     items = document.querySelectorAll('li')
@@ -112,7 +129,6 @@ function removeItem(e){
     if(e.target.parentElement.classList.contains('remove-item')){
         if(confirm('Are you sure?')){
             // remove all items from LocalStorage
-            console.log(e.target.parentElement.previousSibling.textContent)
             items = JSON.parse(localStorage.getItem('items'))
             removeItemFromArray(items, e.target.parentElement.previousSibling.textContent)
             localStorage.setItem('items', JSON.stringify(items))
@@ -148,6 +164,9 @@ function resetUI(){
         filterItem.style.display = 'block'
         clearButton.style.display = 'block'
     }
+
+    formBtn.innerHTML = '<i class="fa-solid fa-plus"></i>  Add Item'
+    isEditMode = false;
 }
 
 window.addEventListener('load', (e) => {
