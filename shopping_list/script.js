@@ -4,6 +4,8 @@ const itemForm = document.getElementById('item-form')
 const itemList = document.getElementById('item-list')
 const clearButton = document.getElementById('clear')
 const filterItem = document.getElementById('filter')
+let isEditMode = false;
+const formBtn = itemForm.querySelector('.btn') 
 
 
 
@@ -88,6 +90,22 @@ function removeItemFromArray(items, value){
 
 }
 
+function setItemToEdit(item){
+    items = document.querySelectorAll('li')
+    items.forEach(i => {
+        i.className = ''
+    });
+    
+    isEditMode = true
+    console.log(item)
+    item.classList.add('edit-mode')
+    formBtn.style.backgroundColor = '#228B22';
+    inputItem.value = item.textContent
+    formBtn.innerHTML = '<i class="fa-solid fa-pen"></i>   Update Item'
+
+
+    
+}
 
 function removeItem(e){
     // Check if the remove icon was clicked
@@ -104,6 +122,9 @@ function removeItem(e){
             resetUI();
         }
         
+    }
+    else{
+        setItemToEdit(e.target)
     }
 }
 
@@ -160,6 +181,8 @@ function filter_Item(e){
     });
     
 }
+
+
 
 itemForm.addEventListener('submit', addItem);   
 itemList.addEventListener('click', removeItem);
