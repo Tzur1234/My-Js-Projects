@@ -175,7 +175,14 @@ function resetUI(){
         clearButton.style.display = 'block'
     }
 
-    formBtn.innerHTML = '<i class="fa-solid fa-plus"></i>  Add Item'
+    // if rest Add button
+    formBtn.innerHTML = ''
+    icon = document.createElement('i')
+    icon.className = 'fa-solid fa-plus'
+    formBtn.appendChild(icon)
+    formBtn.appendChild(document.createTextNode(' Add Item'))
+    formBtn.style.backgroundColor = '#000000'
+
     isEditMode = false;
 }
 
