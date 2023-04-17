@@ -55,6 +55,16 @@ function addItem(e){
         return;
     }
 
+    // Check if the item already exsit
+    itemsDOM = JSON.parse(localStorage.getItem('items'))
+    itemsDOM.forEach((item) => {
+        if(item.toLowerCase() === inputItem.value.toLowerCase()){
+            alert('The value aleady exists')
+            return;
+        }
+    });
+
+
     // Check for edit mode
     if(isEditMode){
         const itemToEdit = document.querySelector('.edit-mode')
@@ -73,7 +83,7 @@ function addItem(e){
         // reset the UI 
         resetUI()
     }
- 
+
     // add the item to the UI
     addItemUI(inputItem.value)
 
