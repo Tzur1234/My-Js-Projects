@@ -70,13 +70,13 @@ const updateStatusDB = (set_status, id) => {
   .then(res => res.json())
   .then(data => {
     console.log('finish updating', data)
-
   })
   .catch(error => console.log('something went wrong: ', error))
 
 }
 
 const updateState = (e) => {
+  console.log('one click')
   if(e.target.classList.contains('todo')){
     
     if(e.target.classList.contains('done')){
@@ -93,7 +93,7 @@ const updateState = (e) => {
     }
     else{
       showSpinner()
-      
+
       // update DB
      updateStatusDB(true, e.target.dataset.id)
      .then(() => {
@@ -106,9 +106,26 @@ const updateState = (e) => {
   }
 }
 
+const deleteToDo = (e) => {
+  if(e.target.classList.contains('todo')){
+    console.log('dblclick!')
+
+    const id = e.target.dataset.id;
+    fetch(`${apiUrl}/${id}`, {
+      method: 'DELETE',
+    })
+    .then(res => res.json())
+    .then(() =>{ 
+      e.target.remove()
+      
+    });
+  }
+}
+
 window.addEventListener('load', getTodos)
 document.querySelector('button').addEventListener('click', addTodoDB)
 
+document.getElementById('todo-list').addEventListener('dblclick', deleteToDo)
 document.getElementById('todo-list').addEventListener('click', updateState)
 
 // add evetn Listener when press a todo
