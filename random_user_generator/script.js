@@ -2,10 +2,19 @@
 function fetchUser(){
   showSpinner()
   fetch('https://randomuser.me/api/')
-  .then((res) => res.json())
+  .then((res) => {
+    if(res.status === 404){
+      throw new Error('Response 404')
+    }
+    return res.json()
+  })
   .then((data) => {
     hideSpinner()
     displayUser(data.results[0])
+  })
+  .catch(error => {
+    hideSpinner()
+    document.querySelector('#user').innerHTML = `<p class="text-xl text-center text-red-500 mb-5">${error}</p>`
   });
 }
 
