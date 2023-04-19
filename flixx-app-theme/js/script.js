@@ -33,6 +33,7 @@ async function displayPopularMovies() {
         // create div-card
         const div = document.createElement('div')
         div.className = 'card'
+        div.setAttribute('data-id', movie.id)
         div.innerHTML = `
         
           <a href="movie-details.html?id=${movie.id}">
@@ -88,6 +89,78 @@ async function displayPopularTvShows() {
     }); 
 }
 
+async function displayMovieDetail() {
+
+    // fetch the movie id from the url
+    const queryString = window.location.search
+    
+    const urlParams = new URLSearchParams(queryString)
+
+    movie_id = urlParams.get('id')
+
+
+    movie_data = await fetchData(`/movie/${movie_id}`)
+
+    console.log(movie_data)
+
+    document.getElementById('movie-details').innerHTML = `
+    <div class="details-top">
+    <div>
+      <img
+        src="${
+            movie_data.backdrop_path ? `https://image.tmdb.org/t/p/w500${movie_data.backdrop_path}`
+            : `./flixx-app-theme/images/no-image.jpg` 
+        }"
+        class="card-img-top"
+        alt="${movie_data.title}"
+      />
+    </div>
+    <div>
+      <h2>${movie_data.title}</h2>
+      <p>
+        <i class="fas fa-star text-primary"></i>
+        ${Math.round(movie_data.vote_average)} / 10
+      </p>
+      <p class="text-muted">Release Date: ${movie_data.release_date}</p>
+      <p>
+      ${movie_data.overview}
+      </p>
+      <h5>Genres</h5>
+      <ul class="list-group">
+      ${ movie_data.genres.map((genre) => `<li> ${genre.name} </li>`).join(' ')}
+        <li>Genre 1</li>
+        <li>Genre 2</li>
+        <li>Genre 3</li>
+      </ul>
+      <a href="${movie_data.homepage}" target="_blank" class="btn">Visit Movie Homepage</a>
+    </div>
+  </div>
+  <div class="details-bottom">
+    <h2>Movie Info</h2>
+    <ul>
+      <li><span class="text-secondary">Budget:</span> $${movie_data.budget}</li>
+      <li><span class="text-secondary">Revenue:</span> $${movie_data.revenue}</li>
+      <li><span class="text-secondary">Runtime:</span> ${movie_data.runtime}</li>
+      <li><span class="text-secondary">Status:</span> ${movie_data.status}</li>
+    </ul>
+    <h4>Production Companies</h4>
+    <div class="list-group">
+    ${ movie_data.production_companies.map((comp) => ` ${comp.name}, `).join(' ')}
+    </div>
+  </div>
+    `
+
+    // append compenies
+    compenies = document.querySelectorAll('list-group')[1]   
+    movie_data.production_companies.forEach(comp => {
+        console.log(comp.name)
+        compenies.appendChild(document.createTextNode(`${comp.name},`))
+    })
+
+}
+
+
+
 
 // Highlight active link
 function highlightActiveLink(){
@@ -124,6 +197,7 @@ function init(){
             displayPopularTvShows()
             break;
         case '/flixx-app-theme/movie-details.html':
+            displayMovieDetail()
             console.log('movie-details');
             break;
         case '/flixx-app-theme/tv-details.html':
