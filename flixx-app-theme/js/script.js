@@ -6,6 +6,9 @@ const global = {
 
 // General fetch function form TMBD API
 async function fetchData(url){
+    // Spinner
+    showSpinner()
+    
     // credenentials
     API_KEY = '1bcda823c623f469eb606c40d700de42'
     BASE_URL_PATH = 'https://api.themoviedb.org/3'
@@ -14,6 +17,9 @@ async function fetchData(url){
 
     const res = await fetch(FINAL_URL);
     const data = await res.json()
+    
+    
+    hideSpinner()
     return data
 }
 
@@ -30,13 +36,12 @@ async function displayPopularMovies() {
         div.innerHTML = `
         
           <a href="movie-details.html?id=${movie.id}">
-          <img
-          src="${
-            movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : `./flixx-app-theme/images/no-image.jpg`  }"
+            <img
+            src="${movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : `./flixx-app-theme/images/no-image.jpg`  }"
 
-          class="card-img-top"
-          alt="${movie.title}"
-          />    
+            class="card-img-top"
+            alt="${movie.title}"
+            />    
           </a>
           <div class="card-body">
             <h5 class="card-title">${movie.title}</h5>
@@ -47,14 +52,41 @@ async function displayPopularMovies() {
         `
         // insert HTML to the div card
         document.getElementById('popular-movies').appendChild(div)
-        
-
-    });
-
-    
-    
+    }); 
 }
 
+async function displayPopularTvShows() {
+    // fetch the data
+    let shows = await fetchData('/tv/popular')
+    shows = shows.results
+    console.log(shows)
+    // show the data
+    shows.forEach(show => {
+        // create div-card
+        const div = document.createElement('div')
+        div.className = 'card'
+        div.innerHTML = `
+        
+        <a href="tv-details.html?id=${show.id}">
+        <img
+          src="${
+            show.poster_path ? `https://image.tmdb.org/t/p/w500${show.poster_path}`
+            : `flixx-app-theme/images/no-image.jpg`}"
+          class="card-img-top"
+          alt="Show Title"
+        />
+      </a>
+      <div class="card-body">
+        <h5 class="card-title">${show.name}</h5>
+        <p class="card-text">
+          <small class="text-muted">Aired: ${show.first_air_date}</small>
+        </p>
+      </div>
+        `
+        // insert HTML to the div card
+        document.getElementById('popular-shows').appendChild(div)
+    }); 
+}
 
 
 // Highlight active link
@@ -65,6 +97,16 @@ function highlightActiveLink(){
             link.classList.add('active')
         }
     })
+}
+
+
+function showSpinner(){
+    document.querySelector('.spinner').classList.add('show')
+}
+
+function hideSpinner(){
+    document.querySelector('.spinner').classList.remove('show')
+
 }
 
 
@@ -79,6 +121,7 @@ function init(){
             break;
         case '/flixx-app-theme/shows.html':
             console.log('show')
+            displayPopularTvShows()
             break;
         case '/flixx-app-theme/movie-details.html':
             console.log('movie-details');
@@ -97,4 +140,4 @@ function init(){
 }
 
 init()
-fetchData('/movie/popular')
+s
