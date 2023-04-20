@@ -16,25 +16,7 @@ const global = {
     }
 }
 
-// General fetch function form TMBD API
-async function fetchData(url){
-    // Spinner
-    showSpinner()
-    
-    // credenentials
-    API_KEY = global.api.key
-    BASE_URL_PATH = global.api.url_path
-
-    FINAL_URL = `${BASE_URL_PATH}/${url}?api_key=${API_KEY}&language=en-US&page=1`
-
-    const res = await fetch(FINAL_URL);
-    const data = await res.json()
-        
-    hideSpinner()
-    return data
-}
-
-// General fetch function form TMBD API
+// General fetch movies/tv-shows based on search term
 async function fetchAPIData(){
   // Spinner
   showSpinner()
@@ -68,6 +50,8 @@ async function search(){
 
   // validation for not empty
   if(global.search.term !== '' && global.search.term !== null){
+
+    // fetch API
     const {results, total_pages, page, total_results} = await fetchAPIData();
 
     // Add results data to global scope
@@ -165,6 +149,31 @@ function displayPagination(){
     displaySearchResults(results)
   })
 
+  document.getElementById('prev').addEventListener('click', async () =>{
+    global.search.page--;
+    const {results, total_pages} = await fetchAPIData();
+    displaySearchResults(results)
+  })
+
+}
+
+
+// General fetch function form TMBD API
+async function fetchData(url){
+  // Spinner
+  showSpinner()
+  
+  // credenentials
+  API_KEY = global.api.key
+  BASE_URL_PATH = global.api.url_path
+
+  FINAL_URL = `${BASE_URL_PATH}/${url}?api_key=${API_KEY}&language=en-US&page=1`
+
+  const res = await fetch(FINAL_URL);
+  const data = await res.json()
+      
+  hideSpinner()
+  return data
 }
 
 async function displayPopularMovies() {
@@ -379,7 +388,6 @@ async function displayShowDetails(){
 
 }
 
-
 // Highlight active link
 function highlightActiveLink(){
     links = document.querySelectorAll('.nav-link')
@@ -389,7 +397,6 @@ function highlightActiveLink(){
         }
     })
 }
-
 
 function showSpinner(){
     document.querySelector('.spinner').classList.add('show')
