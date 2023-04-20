@@ -15,10 +15,16 @@ Even though this project has several html pages, it only has one single java scr
 
 After making this project, I have a better understanding on how JS works behind the scenes. At his core, Js is synchronous ( also called single thread ). It means that every operation happened one at a time. It is also called “single thread of execution” . 
 
+![freeCodeCamp-Cover-2](https://user-images.githubusercontent.com/113801007/233423053-ea78d04e-3aec-493e-8a34-189edbf62174.png)
+
+
 
 
 
 Some of the operations like (fetch, setTimeout , setIntervals and many others) are not part of the core JS language. They are actually appended tools that come with the engine upon JS is running ( like v8 for instance). Those are asynchronous operations. So even though JS itself is synchronous, some of the code is still running asynchronously. During the project I use async and await to manage the asynchronous operations along the synchronous operations. I learned about TASK QUEUE and EVENT LOOP to get a better understanding of how JS works behind the scenes.
+
+
+![144869840-33551e3d-49f0-47ee-b7c2-9d7ec300fad2](https://user-images.githubusercontent.com/113801007/233423391-7b519a5e-7230-4359-a117-8267bdf4defc.png)
 
 
 
