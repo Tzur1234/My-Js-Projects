@@ -6,7 +6,8 @@ const global = {
       term: '',
       type: '',
       page: 1,
-      totalPages: 1
+      totalPages: 1,
+      totalResults : 0
     },
     api : {
       key : '1bcda823c623f469eb606c40d700de42',
@@ -42,7 +43,7 @@ async function fetchAPIData(){
   API_KEY = global.api.key
   BASE_URL_PATH = global.api.url_path
 
-  FINAL_URL = `${BASE_URL_PATH}/search/${global.search.type}?api_key=${API_KEY}&language=en-US&page=1&include_adult=false&query=${global.search.term}`
+  FINAL_URL = `${BASE_URL_PATH}/search/${global.search.type}?api_key=${API_KEY}&language=en-US&page=1&include_adult=false&query=${global.search.term}&page=${global.search.page}`
 
 
 
@@ -67,7 +68,12 @@ async function search(){
 
   // validation for not empty
   if(global.search.term !== '' && global.search.term !== null){
-    const {results, total_pages, page} = await fetchAPIData();
+    const {results, total_pages, page, total_results} = await fetchAPIData();
+
+    // Add results data to global scope
+    global.search.totalResults = total_results
+    global.search.totalPages = total_pages
+    global.search.page = page
 
     // insert in the DOM
     displaySearchResults(results)
@@ -86,6 +92,18 @@ async function search(){
 
 // Show movies/tv-shows results
 function displaySearchResults(results){
+
+  // clear previous data
+  document.getElementById('search-results').innerHTML = '';
+  document.getElementById('pagination').innerHTML = '';
+  document.getElementById('search-results-heading').innerHTML = '';
+
+  // Add results data to heading
+  const h1 = document.createElement('h1')
+  h1.appendChild(document.createTextNode(`${results.length} results of ${ global.search.totalResults} for "${global.search.term}"`))
+  document.querySelector('#search-results-heading').appendChild(h1)
+
+  
 
   if(results.length === 0){
     showAlert('No results', 'error')
@@ -115,11 +133,39 @@ function displaySearchResults(results){
     document.getElementById('search-results').appendChild(card)
   });
 
-
-
+  displayPagination()
 
 }
 
+// display Pagination stuff
+function displayPagination(){
+  const div = document.createElement('div')
+  div.classList.add('pagination')
+  div.innerHTML = `
+
+  <button class="btn btn-primary" id="prev">Prev</button>
+  <button class="btn btn-primary" id="next">Next</button>
+  <div class="page-counter">Page ${global.search.page} of ${global.search.totalPages}</div>
+ `
+
+ document.querySelector('#pagination').appendChild(div)
+
+  // disable buttons
+  if(global.search.page === 1){
+    document.getElementById('prev').disabled = true;
+  }
+  if(global.search.page == global.search.totalPages){
+    document.getElementById('next').disabled = true;
+  }
+
+  // Next page
+  document.getElementById('next').addEventListener('click', async () =>{
+    global.search.page++;
+    const {results, total_pages} = await fetchAPIData();
+    displaySearchResults(results)
+  })
+
+}
 
 async function displayPopularMovies() {
     // fetch the data
